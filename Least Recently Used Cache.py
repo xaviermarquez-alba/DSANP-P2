@@ -204,11 +204,11 @@ def test_4(cache_capacity):
     print('\n')  
 
 
-# Test CASE 1: test cache miss for first element (1,1)
+# Test CASE 1: test cache miss for removed element (1,1)
 test_1(5, [(1,1),(2,2),(3,3),(4,4),(5,5),(6,6)])
 
 
-# Test CASE 2: Test value when cache hit
+# Test CASE 2: Test value on cache hit
 test_2(5, [(1,'A'),(2,'B'),(3,'C'),(4,'D'),(5,'E')], 4, 'D')
 
 
@@ -216,7 +216,7 @@ test_2(5, [(1,'A'),(2,'B'),(3,'C'),(4,'D'),(5,'E')], 4, 'D')
 test_3(5, [(1,'Old1'),(2,'Old2'),(3,'Old3'),(4,'Old4'),(5,'Old5'),(6,'Old6'),(7,'Old7')], [(1,'New1'),(2,'New2'),(3,'New3'),(4,'New4'),(5,'New5')])
 
 
-# Test CASE 4: stress test 
+# Test CASE 4:
 # 1. set cache to 100 and add 100 items 
 # 2. get all even numbers 
 # result cache: first 50 numbers are odd numbers, last 50 items are even numbers
