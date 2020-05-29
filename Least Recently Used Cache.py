@@ -37,9 +37,17 @@ class DLinkedList(object):
         return None
 
     def delete_node(self, Node):
+        # if node is head 
         if Node is self.head:
-            self.head = Node.next
-            Node.next.prev = None
+            # if only one Node in the list
+            if self.head is self.tail:
+                self.head = None
+                self.tail = self.head
+            # shift head
+            else:
+                self.head = Node.next
+                Node.next.prev = None
+        # if node is tail
         elif Node is self.tail:
             self.tail = Node.prev
             Node.prev.next = None
@@ -203,6 +211,25 @@ def test_4(cache_capacity):
     print('*** Pass Test 4 ***')
     print('\n')  
 
+# Test case 5: new review test
+def test_5(cache_capacity):
+    print('*** Test 5: stress test***')
+
+    our_cache = LRU_Cache(cache_capacity)
+
+    our_cache.set(1, 1)
+    miss_cache = our_cache.get(2)  # returns -1
+    our_cache.set(1, 11111) # change cache value for 1
+    hit_cache_1111 = our_cache.get(1) # return 1111
+    # new cache queue
+    our_cache.list_cache.show_list()
+    
+    # check result values
+    assert miss_cache == -1, 'Fail Test miss cache'
+    assert hit_cache_1111 == 11111, 'Fail Test change cache value'
+    # show cache queue
+    print('*** Pass Test 5 ***')
+    print('\n')  
 
 # Test CASE 1: test cache miss for removed element (1,1)
 test_1(5, [(1,1),(2,2),(3,3),(4,4),(5,5),(6,6)])
@@ -223,3 +250,5 @@ test_3(5, [(1,'Old1'),(2,'Old2'),(3,'Old3'),(4,'Old4'),(5,'Old5'),(6,'Old6'),(7,
 
 test_4(100)
 
+# Test CASE 5: test from the review, missing and change value
+test_5(5)
