@@ -28,11 +28,11 @@ def find_files(suffix, path):
     if not os.path.isdir(path):
         # if the path is a file and check the suffix
         if os.path.isfile(path):
-			if path.endswith(suffix):
-				lists_paths.append(path)
-				return lists_paths
+            if path.endswith(suffix):
+                lists_paths.append(path)
+                return lists_paths
 
-    	return []
+        return []
 
     current_list = os.listdir(path)
 
@@ -93,22 +93,27 @@ def test_4():
     print('Test 4 Pass!')
 
 # Test if path is a file and the suffix is the same
-def test_5():
-	path = "./testdir/problem2/problem2.py"
-	suffix = ".py"
-	result_path_isfile = find_files(suffix, path)
 
-	assert result_path_isfile == ['./testdir/problem2/problem2.py']
-	print('Test 5 Pass!')
+
+def test_5():
+    path = "./testdir/problem2/problem2.py"
+    suffix = ".py"
+    result_path_isfile = find_files(suffix, path)
+
+    assert result_path_isfile == ['./testdir/problem2/problem2.py']
+    print('Test 5 Pass!')
 
 # Test if path is a file and the suffix is not the same
-def test_6():
-	path = "./testdir/problem2/problem2.py"
-	suffix = ".txt"
-	result_path_isfile = find_files(suffix, path)
 
-	assert result_path_isfile == []
-	print('Test 6 Pass!')
+
+def test_6():
+    path = "./testdir/problem2/problem2.py"
+    suffix = ".txt"
+    result_path_isfile = find_files(suffix, path)
+
+    assert result_path_isfile == []
+    print('Test 6 Pass!')
+
 
 # Tests
 test_1()
