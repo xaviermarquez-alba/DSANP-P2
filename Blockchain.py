@@ -1,12 +1,13 @@
 import hashlib
 import datetime
 
-class Block:
+class Block(object):
     def __init__(self, data):
         self.timestamp = datetime.datetime.utcnow()
-        self.data = data
+        self.data = str(data)
         self.previous_hash = 0
         self.hash = self.calc_hash()
+        self.next = None
 
     def set_previous_hash(self, prev_hash):
         self.previous_hash = prev_hash
@@ -17,29 +18,70 @@ class Block:
         sha.update(hash_str)
         return sha.hexdigest()
 
-class Blockchain:
+class Blockchain(object):
     def __init__(self):
         self.head = None
         self.tail = None
 
+    def get_head(self):
+        return self.head
+
     def add_block(self, data):
+        if data is None:
+            print('Invalid data not added to the Blockchain')
+            return
+        
         new_block = Block(data)
 
         if self.head is None:
-            self.tail = self.head = new_block
+            self.head = new_block
+            self.tail = self.head 
         else:
             new_block.set_previous_hash(self.tail.hash)
             self.tail.next = new_block
-            self.tail = self.tail.next
+            self.tail = new_block
 
-new_blockchain = Blockchain()
-new_blockchain.add_block('UNO')
-new_blockchain.add_block('DOS')
-new_blockchain.add_block('TRES')
-new_blockchain.add_block('CUATRO')
-new_blockchain.add_block('CINCO')
-new_blockchain.add_block('SEIS')
+def test_blockchain(blockchain_list):
+    pass_test = True 
+    blockchain = Blockchain()
+    for block in blockchain_list:
+        blockchain.add_block(block)
+    
+    # show block chain
+    current_node = blockchain.get_head()
 
-print(new_blockchain.head.next.hash)
-print(new_blockchain.head.next.next.previous_hash)
-print(new_blockchain.tail.hash)
+    print('--------------------BLOCKCHAIN NODES--------------------')
+    while current_node:
+        print("Data: " + current_node.data + " | Timestamp: " + str(current_node.timestamp))
+        print("Hash: " + current_node.hash)
+        print("Prev Hash: " + str(current_node.previous_hash))
+        print('--+--')
+        
+        # test if prevhash
+        if not current_node is blockchain.get_head() and current_node.next:
+            if not current_node.hash == current_node.next.previous_hash:
+                pass_test = False
+            
+        current_node = current_node.next
+    print('--------------------BLOCKCHAIN END--------------------')
+
+    if pass_test:
+        print('*** Test Pass! ****')
+    else:
+        print('*** Test Fail! ****')
+    print("\n")
+
+# Test 1
+test_blockchain(['ABCW', 'CDGR', 'JYEBA']) 
+
+# Test 2
+test_blockchain([1,2,3,4]) 
+
+# Test 3
+test_blockchain(['#One Item!'])
+
+# Test 4
+test_blockchain(['', 'test', 'empty', 'string']) # empty string is a valid item for the blockchain
+
+# Test 5
+test_blockchain(['A', 'B', None, 'C', None, 'D']) # expected output: blockchain ignoring None items and  print 2 'Invalid data!', 
