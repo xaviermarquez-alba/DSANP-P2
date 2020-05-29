@@ -31,7 +31,9 @@ def find_files(suffix, path):
             if path.endswith(suffix):
                 lists_paths.append(path)
                 return lists_paths
-
+        else:
+            print('Invalid path!')
+        
         return []
 
     current_list = os.listdir(path)
