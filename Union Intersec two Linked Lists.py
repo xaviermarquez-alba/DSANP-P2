@@ -41,8 +41,16 @@ class LinkedList:
 
         return size
 
+    def get_list(self):
+        cur_head = self.head
+        out_list = []
+        while cur_head:
+            out_list.append(cur_head.value) 
+            cur_head = cur_head.next
+        return out_list
+
+
 def union(llist_1, llist_2):
-    # Your Solution Here
     union_set = set()
     current_node_l1 = llist_1.head
 
@@ -63,7 +71,6 @@ def union(llist_1, llist_2):
     return union_link_list
 
 def intersection(llist_1, llist_2):
-    # Your Solution Here
     intersection_set = set()
 
     current_node_l1 = llist_1.head
@@ -84,37 +91,76 @@ def intersection(llist_1, llist_2):
 
     return intersection_link_list
 
+def test_union_intersection(list1, list2):
+    linked_list_1 = LinkedList()
+    linked_list_2 = LinkedList()
+    
+    for i in list1:
+        linked_list_1.append(i)
 
-# Test case 1
+    for i in list2:
+        linked_list_2.append(i)
 
-linked_list_1 = LinkedList()
-linked_list_2 = LinkedList()
+    # Test Union 
+    union1 = union(linked_list_1,linked_list_2)
+    union1_list = union1.get_list()
 
-element_1 = [3,2,4,35,6,65,6,4,3,21]
-element_2 = [6,32,4,9,6,1,11,21,1]
+    # python Union function
+    py_union1 = list(set(list1).union(set(list2)))
 
-for i in element_1:
-    linked_list_1.append(i)
+    if sorted(py_union1) == sorted(union1_list):
+        print('*** Test Pass: Union List ***')
+        print(union1)
+    else:
+        print('*** Test Fail: Union List ***')
 
-for i in element_2:
-    linked_list_2.append(i)
+    # Test Intersection 
+    intersection1 = intersection(linked_list_1,linked_list_2)
+    intersection1_list = intersection1.get_list()
+    
+    # python Intersect function
+    py_intersection1 = list(set(list1).intersection(set(list2)))
 
-print (union(linked_list_1,linked_list_2))
-print (intersection(linked_list_1,linked_list_2))
-# Test case 2
+    if sorted(py_intersection1) == sorted(intersection1_list):
+        print('*** Test Pass: Intersection List ***')
+        print(intersection1)
+    else:
+        print('*** Test Fail: Intersection List ***')
 
-linked_list_3 = LinkedList()
-linked_list_4 = LinkedList()
+    print('\n')
+# Test case 1, Normal case
 
-element_1 = [3,2,4,35,6,65,6,4,3,23]
-element_2 = [1,7,8,9,11,21,1]
+l1 = [3,2,4,35,6,64,6,4,3,21,33,45,6,7,2,34,56,13,56,7,8,9,0,31,5,12,5]
+l2 = [6,32,4,9,6,1,11,21,1,4,6,78,1,80,215,6,215,61,5]
+print('Test 1 Normal case')
+test_union_intersection(l1,l2)
 
-for i in element_1:
-    linked_list_3.append(i)
 
-for i in element_2:
-    linked_list_4.append(i)
+# Test case 2, List 1 empty
 
-print (union(linked_list_3,linked_list_4))
-print (intersection(linked_list_3,linked_list_4))
+l1 = []
+l2 = [6,32,4,9,6,1,11,21,1,4,6,78,1,80,215,6,215,61,5]
+print('Test 2, List 1 empty')
+test_union_intersection(l1,l2)
 
+# Test case 3, List 1,2 empty
+
+l1 = []
+l2 = []
+print('Test 3 List 1,2 empty')
+test_union_intersection(l1,l2)
+
+# Test case 4, intersection null
+
+l1 = ['A','B','C']
+l2 = [1,2,3,4]
+print('Test 4 intersection null')
+test_union_intersection(l1,l2)
+
+# Test case 5, None item
+l1 = [None, 1]
+
+l2 = [1,2,3,4]
+
+print('Test 5 None item')
+test_union_intersection(l1,l2)
