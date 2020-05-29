@@ -164,24 +164,6 @@ class Tree(object):
     def get_root(self):
         return self.root
 
-def pre_order(tree):
-    visit_order = list()
-    def traverse(node):
-        if node:
-            # visit the node
-            if node.is_leaf():
-                visit_order.append((node.get_value(),node.frequency))
-            else:
-                visit_order.append((node.get_value(),node.frequency))
-                # traverse left subtree
-                traverse(node.get_left_child())
-                # traverse right subtree
-                traverse(node.get_right_child())
-    
-    traverse(tree.get_root())
-    
-    return visit_order
-
 def path_from_node_to_root(root, char):
     if root is None:
         return None
@@ -221,6 +203,10 @@ def char_coding(root, char):
     return None
 
 def huffman_encoding(data):
+    if data is None or data == '':
+        print('Invalid input data!')
+        return None, None
+
     freq_dict = calc_string_freq(data)
     prior_queue = PriQueue()
 
@@ -230,6 +216,10 @@ def huffman_encoding(data):
 
     deque_item_1 = prior_queue.dequeue()
     deque_item_2 = prior_queue.dequeue()
+    
+    # if only 1 item in queue add a aux item to balance the tree with frecuency 0
+    if deque_item_2 is None:
+        deque_item_2 = Node(0, 1)
 
     while deque_item_1 and deque_item_2:
         value = deque_item_1.frequency + deque_item_2.frequency
@@ -257,39 +247,84 @@ def huffman_encoding(data):
     return encode_final, tree_code
 
 def huffman_decoding(data_encoded, tree):
+    if data_encoded is None:
+        return None
+
     decoded_string = ''
     current_node = tree.get_root()
 
     for bit in data_encoded:
-        if bit == '1':
-            current_node = current_node.get_right_child()
-        elif bit == '0':
-            current_node = current_node.get_left_child()
-
-        if current_node.is_leaf():
+        if not (current_node.left and current_node.right):
             decoded_string += current_node.char
-            current_node = tree.get_root()
-            continue
+        else:
+            if bit == '1':
+                current_node = current_node.get_right_child()
+            elif bit == '0':
+                current_node = current_node.get_left_child()
+
+            if current_node.is_leaf():
+                decoded_string += current_node.char
+                current_node = tree.get_root()
+                continue
         
     return decoded_string
 
-if __name__ == "__main__":
-    codes = {}
 
-    a_great_sentence = "The bird is the word"
+def encode_decode_test(data):
+    print("\n")
+    if data:
+        print ("The content of the data is: {}".format(data))
+        print("The size of the data is:{}".format(sys.getsizeof(data)))
+    else:
+        print ("The content of the data is: None")
+        print("The size of the data is: None")
 
-    print ("The size of the data is: {}\n".format(sys.getsizeof(a_great_sentence)))
-    print ("The content of the data is: {}\n".format(a_great_sentence))
-
-    encoded_data, tree = huffman_encoding(a_great_sentence)
-
-    print ("The size of the encoded data is: {}\n".format(sys.getsizeof(int(encoded_data, base=2))))
-    print ("The content of the encoded data is: {}\n".format(encoded_data))
-
+    # encoded data
+    encoded_data, tree = huffman_encoding(data)
+    
+    # decoded data
     decoded_data = huffman_decoding(encoded_data, tree)
 
-    print ("The size of the decoded data is: {}\n".format(sys.getsizeof(decoded_data)))
-    print ("The content of the encoded data is: {}\n".format(decoded_data))
+    if decoded_data is not None:
+        
+        print ("The size of the encoded data is: {}".format(sys.getsizeof(int(encoded_data, base=2))))
+        print ("The content of the encoded data is: {}".format(encoded_data))
+        print ("The size of the decoded data is: {}".format(sys.getsizeof(decoded_data)))
+        print ("The content of the decoded data is: {}".format(decoded_data))
+
+
+        # if the data is the same after decoded
+        if decoded_data == data:
+            print('*** Pass Data Test ***')
+        else:
+            print('*** Fail Data Test ***')
+            
+        if int(sys.getsizeof(int(encoded_data, base=2))) < int(sys.getsizeof(data)):
+            print('*** Pass Compression Size Test ***')
+        else:
+            print('*** Fail Compression Size Test ***')
 
 
 
+if __name__ == "__main__":
+    # Tests
+
+    codes = {}
+    a_great_sentence = "The bird is the word"
+    print ("The size of the data is: {}".format(sys.getsizeof(a_great_sentence)))
+    print ("The content of the data is: {}".format(a_great_sentence))
+    encoded_data, tree = huffman_encoding(a_great_sentence)
+    print ("The size of the encoded data is: {}".format(sys.getsizeof(int(encoded_data, base=2))))
+    print ("The content of the encoded data is: {}".format(encoded_data))
+    decoded_data = huffman_decoding(encoded_data, tree)
+    print ("The size of the decoded data is: {}".format(sys.getsizeof(decoded_data)))
+    print ("The content of the encoded data is: {}".format(decoded_data))
+
+
+    # Tests encode and decode
+    encode_decode_test("Lorem Ipsum") 
+    encode_decode_test("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
+    encode_decode_test("AAAAAAAAAAAAAAAAAAAA")
+    encode_decode_test("B")
+    encode_decode_test(' ')
+    encode_decode_test('')
