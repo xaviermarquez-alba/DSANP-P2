@@ -1,5 +1,5 @@
 import sys
-
+# calc the frecuency character for a input string, retun a dict
 def calc_string_freq(string):
     frequency_dict = dict()
     for char in string:
@@ -111,7 +111,7 @@ class PriQueue(object):
                     node.prev = self.tail.prev
                     node.next = self.tail
                     self.tail.prev = node
-
+            # case 3 if current node is head
             elif current_node is self.head:
 
                 if current_node.priority >= node.priority:
@@ -164,25 +164,7 @@ class Tree(object):
     def get_root(self):
         return self.root
 
-def path_from_node_to_root(root, char):
-    if root is None:
-        return None
-
-    elif root.char == char:
-        return [char]
-
-    left_answer = path_from_node_to_root(root.left, char)
-    if left_answer is not None:
-        left_answer.append(root.char)
-        return left_answer
-
-    right_answer = path_from_node_to_root(root.right, char)
-    if right_answer is not None:
-        right_answer.append(root.char)
-        return right_answer
-    return None
-
-
+# encoding char using the binary root
 def char_coding(root, char):
     if root is None:
         return None
